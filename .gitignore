@@ -1,0 +1,26 @@
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-wheel-metadata/
+
+# IDE settings
+.idea/
+.vscode/
+
+# Flask specific
+instance/
+
+# User generated content and sensitive data
+uploads/
+audio_files/
+user_data/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+*.db
