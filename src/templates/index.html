@@ -211,7 +211,62 @@
         let currentStoryId = null;
         let selectedCategory = 'general';
         let currentPrompts = [];
+        let allStories = []; // 物語履歴全体を保持する変数
         let currentPromptIndex = 0;
+
+        // Pythonサーバーから取得していたプロンプト情報をここに直接定義
+        const REMINISCENCE_PROMPTS = {
+            "childhood": {
+                "name": "幼少期の思い出",
+                "prompts": [
+                    "小学校の運動会で一番印象に残っていることは何ですか？",
+                    "子供の頃、一番好きだった遊びは何でしたか？",
+                    "家族と一緒に行った旅行で覚えていることはありますか？",
+                    "初めて自転車に乗れた時のことを覚えていますか？",
+                    "子供の頃の夏休みの思い出を教えてください。"
+                ]
+            },
+            "school": {
+                "name": "学生時代の出来事",
+                "prompts": [
+                    "学生時代の一番の友達との思い出は何ですか？",
+                    "部活動や課外活動で印象に残っていることはありますか？",
+                    "学校の先生で特に印象に残っている方はいますか？",
+                    "文化祭や体育祭での思い出を教えてください。",
+                    "初恋の思い出はありますか？"
+                ]
+            },
+            "work": {
+                "name": "仕事での経験",
+                "prompts": [
+                    "初めての給料で何を買いましたか？",
+                    "仕事で一番やりがいを感じた瞬間はいつですか？",
+                    "職場の同僚との思い出で印象に残っていることはありますか？",
+                    "仕事で大きな成功を収めた時のことを教えてください。",
+                    "転職や昇進の時の気持ちを覚えていますか？"
+                ]
+            },
+            "family": {
+                "name": "家族との時間",
+                "prompts": [
+                    "結婚式の日のことを覚えていますか？",
+                    "お子さんが生まれた時の気持ちを教えてください。",
+                    "家族で過ごした特別な記念日はありますか？",
+                    "お孫さんとの思い出で印象に残っていることはありますか？",
+                    "家族みんなで笑った楽しい出来事はありますか？"
+                ]
+            },
+            "hobbies": {
+                "name": "趣味や特技",
+                "prompts": [
+                    "一番熱中した趣味は何でしたか？",
+                    "料理で得意だった（得意な）メニューはありますか？",
+                    "スポーツや運動で楽しかった思い出はありますか？",
+                    "手作りで何かを作った思い出はありますか？",
+                    "音楽や芸術で心に残っている体験はありますか？"
+                ]
+            }
+        };
 
         // 励ましメッセージ
         const encouragementMessages = [
@@ -273,7 +328,7 @@
                     selectedCategory = btn.dataset.category;
                     
                     if (selectedCategory !== 'general') {
-                        await loadPrompts(selectedCategory);
+                        loadPrompts(selectedCategory);
                         showPromptSection();
                     } else {
                         hidePromptSection();
@@ -286,17 +341,14 @@
             });
         }
 
-        async function loadPrompts(category) {
-            try {
-                const response = await fetch(`/api/get_prompts/${category}`);
-                const data = await response.json();
-                if (response.ok) {
-                    currentPrompts = data.prompts;
-                    currentPromptIndex = 0;
-                    showCurrentPrompt();
-                }
-            } catch (error) {
-                console.error('プロンプト読み込みエラー:', error);
+        // API通信の代わりに、上で定義したJavaScriptオブジェクトからプロンプトを読み込む
+        function loadPrompts(category) {
+            if (REMINISCENCE_PROMPTS[category]) {
+                currentPrompts = REMINISCENCE_PROMPTS[category].prompts;
+                currentPromptIndex = 0;
+                showCurrentPrompt();
+            } else {
+                console.error('プロンプトカテゴリが見つかりません:', category);
             }
         }
 
@@ -340,11 +392,12 @@
         async function loadStoryHistory() {
             try {
                 const response = await fetch('/api/get_stories');
+                if (!response.ok) return; // GitHub Pagesでは失敗するが、エラーにしない
                 const stories = await response.json();
-                if (response.ok) {
-                    displayStoryHistory(stories);
-                }
+                allStories = stories; // 取得した物語をグローバル変数に保存
+                displayStoryHistory(stories);
             } catch (error) {
+                // GitHub PagesではAPIがないため、ここは意図的に空にしてエラー表示を防ぐ
                 console.error('物語履歴読み込みエラー:', error);
             }
         }
@@ -360,7 +413,7 @@
                     </div>
                 `;
                 return;
-            }
+           }
 
             container.innerHTML = stories.map(story => `
                 <div class="bg-white p-6 rounded-xl shadow-md border-2 border-gray-100 hover:border-blue-200 transition-all">
@@ -393,9 +446,43 @@
         }
 
         function showFullStory(storyId) {
-            // 新しい物語作成タブに切り替えて、該当の物語を表示
+            // この機能はPythonサーバーとの通信が必要なため、GitHub Pages上では動作しません。
+            // ローカル環境で実行した場合にのみ機能します。
+            const story = allStories.find(s => s.id === storyId);
+            if (!story) {
+                alert('物語の読み込みに失敗しました。この機能はローカル環境でお試しください。');
+                return;
+            }
+
+            // 「新しい物語を作る」タブに切り替え
             showTab('create');
-            // 物語の詳細を表示する処理（実装省略）
+
+            // フォームと出力エリアをリセット/設定
+            document.getElementById("memoryInput").value = story.memory_text || '';
+            document.getElementById("storyText").textContent = story.story;
+            document.getElementById("continuationText").textContent = '';
+            document.getElementById("continuationSection").classList.add("hidden");
+            document.getElementById("audioPreview").classList.add("hidden");
+            document.getElementById("imagePreview").classList.add("hidden");
+            uploadedImageData = null;
+            recordedAudioData = null;
+
+            // 抽出された記憶を表示 (あれば)
+            const extractedMemory = document.getElementById("extractedMemory");
+            if (story.extracted_memory) {
+                document.getElementById("extractedMemoryText").textContent = story.extracted_memory;
+                extractedMemory.classList.remove("hidden");
+            } else {
+                extractedMemory.classList.add("hidden");
+            }
+
+            // 各ボタンを表示
+            currentStoryId = story.id;
+            document.getElementById("playStoryBtn").classList.remove("hidden");
+            document.getElementById("continueStoryBtn").classList.remove("hidden");
+
+            // ページ上部にスクロール
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // 音声録音機能
