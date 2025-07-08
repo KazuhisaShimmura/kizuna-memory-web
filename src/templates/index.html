@@ -126,12 +126,7 @@
                 <div class="mb-6">
                     <label for="imageInput" class="block text-gray-700 text-xl font-bold mb-4">📷 思い出の写真をアップロード（任意）：</label>
                     <div class="bg-green-50 p-6 rounded-lg border-2 border-green-200">
-                        <div class="flex flex-wrap items-center gap-4">
-                            <input type="file" id="imageInput" accept="image/*" class="shadow border rounded-lg py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-xl large-text">
-                            <button id="uploadImageBtn" class="large-button bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl transition-all">
-                                📷 画像をアップロード
-                            </button>
-                        </div>
+                        <input type="file" id="imageInput" accept="image/*" class="shadow border rounded-lg py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-xl large-text w-full">
                         <div id="imagePreview" class="mt-4 hidden">
                             <img id="previewImg" src="" alt="プレビュー" class="max-w-sm max-h-64 rounded-lg shadow-md mx-auto">
                         </div>
@@ -456,42 +451,28 @@
 
         // 画像アップロード機能
         function setupImageUpload() {
-            document.getElementById("uploadImageBtn").addEventListener("click", async () => {
-                const imageInput = document.getElementById("imageInput");
-                const file = imageInput.files[0];
+            const imageInput = document.getElementById("imageInput");
+            const previewImg = document.getElementById("previewImg");
+            const imagePreview = document.getElementById("imagePreview");
 
+            imageInput.addEventListener("change", () => {
+                const file = imageInput.files[0];
                 if (!file) {
-                    alert("画像ファイルを選択してください。");
+                    uploadedImageData = null;
+                    imagePreview.classList.add("hidden");
                     return;
                 }
 
-                const formData = new FormData();
-                formData.append('image', file);
-
-                try {
-                    const response = await fetch("/api/upload_image", {
-                        method: "POST",
-                        body: formData
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        uploadedImageData = data.image_data;
-                        
-                        const previewImg = document.getElementById("previewImg");
-                        const imagePreview = document.getElementById("imagePreview");
-                        
-                        previewImg.src = data.image_data;
-                        imagePreview.classList.remove("hidden");
-                        
-                        showEncouragementMessage("素敵な写真をありがとうございます！📷");
-                    } else {
-                        alert(`エラー: ${data.error}`);
-                    }
-                } catch (error) {
-                    alert(`通信エラー: ${error.message}`);
-                }
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    // Base64エンコードされた画像データを保存
+                    uploadedImageData = reader.result;
+                    // プレビューを表示
+                    previewImg.src = uploadedImageData;
+                    imagePreview.classList.remove("hidden");
+                    showEncouragementMessage("素敵な写真をありがとうございます！📷");
+                };
+                reader.readAsDataURL(file);
             });
         }
 
@@ -667,4 +648,3 @@
     </script>
 </body>
 </html>
-

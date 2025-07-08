@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, send_file
 from flask_cors import CORS
 import google.generativeai as genai
+from google.cloud import texttospeech
 import os
 import base64
 from PIL import Image
@@ -317,57 +318,44 @@ def get_stories():
     stories.sort(key=lambda x: x['created_at'], reverse=True)
     return jsonify(stories)
 
-@app.route('/api/upload_image', methods=['POST'])
-def upload_image():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image file'}), 400
-    
-    file = request.files['image']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
-    
-    if file:
-        try:
-            # 画像をBase64エンコード
-            image_data = base64.b64encode(file.read()).decode('utf-8')
-            return jsonify({'image_data': f"data:image/jpeg;base64,{image_data}"})
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
-
 @app.route('/api/text_to_speech', methods=['POST'])
 def text_to_speech():
     data = request.json
     text = data.get('text')
-    voice_type = data.get('voice_type', 'female_voice')
     
     if not text:
         return jsonify({'error': 'Text is required'}), 400
     
     # APIキーが設定されていない場合のダミーレスポンス
     if not api_key:
-        return jsonify({'error': 'Gemini APIキーが設定されていないため、音声生成機能は利用できません。'}), 400
+        return jsonify({'error': 'APIキーが設定されていないため、音声生成機能は利用できません。'}), 400
     
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        
-        # Gemini APIでテキストから音声を生成
-        response = model.generate_content(
-            text,
-            generation_config=genai.GenerationConfig(
-                response_modalities=["AUDIO"],
-            ),
+        # Google Cloud Text-to-Speech クライアントを初期化
+        client = texttospeech.TextToSpeechClient()
+
+        synthesis_input = texttospeech.SynthesisInput(text=text)
+
+        # 音声設定（日本語、女性、標準的な声）
+        voice = texttospeech.VoiceSelectionParams(
+            language_code="ja-JP", ssml_gender=texttospeech.SsmlVoiceGender.FEMALE
+        )
+
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.MP3
+        )
+
+        response = client.synthesize_speech(
+            input=synthesis_input, voice=voice, audio_config=audio_config
         )
         
-        # 音声データを取得
-        audio_data = response.candidates[0].content.parts[0].inline_data.data
-        
         # 一意のファイル名を生成
-        audio_filename = f"story_{uuid.uuid4().hex}.wav"
+        audio_filename = f"story_{uuid.uuid4().hex}.mp3"
         audio_path = os.path.join(app.config['AUDIO_FOLDER'], audio_filename)
         
         # 音声ファイルを保存
         with open(audio_path, 'wb') as f:
-            f.write(audio_data)
+            f.write(response.audio_content)
         
         return jsonify({'audio_url': f'/api/audio/{audio_filename}'})
     except Exception as e:
@@ -377,10 +365,9 @@ def text_to_speech():
 def serve_audio(filename):
     try:
         audio_path = os.path.join(app.config['AUDIO_FOLDER'], filename)
-        return send_file(audio_path, mimetype='audio/wav')
+        return send_file(audio_path, mimetype='audio/mpeg')
     except Exception as e:
         return jsonify({'error': str(e)}), 404
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-
