@@ -156,6 +156,9 @@
                             <button id="continueStoryBtn" class="large-button bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl hidden transition-all">
                                 📝 続きを作る
                             </button>
+                            <button id="shareStoryBtn" class="large-button bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl hidden transition-all">
+                                🔗 共有する
+                            </button>
                         </div>
                     </div>
                     <div id="storyText" class="story-text text-gray-700 whitespace-pre-wrap leading-relaxed"></div>
@@ -392,14 +395,31 @@
         async function loadStoryHistory() {
             try {
                 const response = await fetch('/api/get_stories');
-                if (!response.ok) return; // GitHub Pagesでは失敗するが、エラーにしない
+                if (!response.ok) {
+                    // サーバーからの取得に失敗した場合、サンプルを表示
+                    throw new Error('Failed to fetch stories from API');
+                }
                 const stories = await response.json();
                 allStories = stories; // 取得した物語をグローバル変数に保存
                 displayStoryHistory(stories);
             } catch (error) {
-                // GitHub PagesではAPIがないため、ここは意図的に空にしてエラー表示を防ぐ
-                console.error('物語履歴読み込みエラー:', error);
+                console.warn('物語履歴の読み込みに失敗しました。サンプルデータを表示します。', error);
+                displaySampleStory();
             }
+        }
+
+        function displaySampleStory() {
+            const sampleStory = {
+                id: 'sample-hikari-no-byoto',
+                created_at: new Date().toISOString(),
+                memory_text: '病院の窓から見た景色の思い出。',
+                story: 'ひかりは、病室の窓から外を眺めるのが日課でした。空の色、雲の形、遠くの街のまたたき。小さな窓は、彼女にとって世界とつながる大きなキャンバスでした。ある日、向かいのビルの窓に、同じように外を眺める男の子の姿を見つけます。...',
+                has_image: true,
+                has_audio: false,
+                image_path: 'images/sample_story_image.png', // 画像へのパス
+                is_sample: true // サンプルであることを示すフラグ
+            };
+            displayStoryHistory([sampleStory]);
         }
 
         function displayStoryHistory(stories) {
@@ -408,14 +428,27 @@
                 container.innerHTML = `
                     <div class="text-center py-12">
                         <div class="text-6xl mb-4">📝</div>
-                        <p class="large-text text-gray-500">まだ物語がありません</p>
+                        <p class="large-text text-gray-500">まだ物語がありません。</p>
                         <p class="text-gray-400">「新しい物語を作る」タブから始めてみましょう</p>
                     </div>
                 `;
                 return;
            }
 
-            container.innerHTML = stories.map(story => `
+            container.innerHTML = stories.map(story => {
+                const buttonHtml = story.is_sample
+                    ? `<a href="https://www.genspark.ai/autopilotagent_viewer?id=1ab88434-fb52-48d1-b08e-4256c900deb0" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-all font-semibold">絵本を見る 📖</a>`
+                    : `<button onclick="showFullStory('${story.id}')" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all">全文を読む</button>`;
+
+                const imageHtml = story.image_path
+                    ? `<div class="my-4 text-center"><img src="${story.image_path}" alt="物語の画像" class="rounded-lg shadow-md max-w-xs inline-block"></div>`
+                    : '';
+
+                const memoryTextHtml = story.memory_text
+                    ? `<div class="mb-4 p-3 bg-gray-50 rounded-lg"><div class="text-sm font-semibold text-gray-600 mb-1">あなたの記憶:</div><div class="text-gray-700">${story.memory_text.substring(0, 100)}${story.memory_text.length > 100 ? '...' : ''}</div></div>`
+                    : '';
+
+                return `
                 <div class="bg-white p-6 rounded-xl shadow-md border-2 border-gray-100 hover:border-blue-200 transition-all">
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex-1">
@@ -429,20 +462,14 @@
                             </div>
                         </div>
                     </div>
-                    ${story.memory_text ? `
-                        <div class="mb-4 p-3 bg-gray-50 rounded-lg">
-                            <div class="text-sm font-semibold text-gray-600 mb-1">記憶:</div>
-                            <div class="text-gray-700">${story.memory_text.substring(0, 100)}${story.memory_text.length > 100 ? '...' : ''}</div>
-                        </div>
-                    ` : ''}
+                    ${memoryTextHtml}
+                    ${imageHtml}
                     <div class="story-text text-gray-700 leading-relaxed">
                         ${story.story.substring(0, 200)}${story.story.length > 200 ? '...' : ''}
                     </div>
-                    <button onclick="showFullStory('${story.id}')" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all">
-                        全文を読む
-                    </button>
+                    ${buttonHtml}
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function showFullStory(storyId) {
@@ -573,6 +600,10 @@
                 document.getElementById("continuationSection").classList.remove("hidden");
             });
 
+            document.getElementById("shareStoryBtn").addEventListener("click", () => {
+                shareStory();
+            });
+
             document.querySelectorAll(".continuation-btn").forEach(btn => {
                 btn.addEventListener("click", () => {
                     generateContinuation(btn.dataset.type);
@@ -588,12 +619,14 @@
             const extractedMemoryText = document.getElementById("extractedMemoryText");
             const playStoryBtn = document.getElementById("playStoryBtn");
             const continueStoryBtn = document.getElementById("continueStoryBtn");
+            const shareStoryBtn = document.getElementById("shareStoryBtn");
 
             if (!memoryInput.trim() && !recordedAudioData) {
                 alert("記憶を入力するか、音声を録音してください。");
                 return;
             }
 
+            // 各要素をリセット
             storyText.textContent = "";
             extractedMemory.classList.add("hidden");
             playStoryBtn.classList.add("hidden");
@@ -633,6 +666,7 @@
                     currentStoryId = data.story_id;
                     playStoryBtn.classList.remove("hidden");
                     continueStoryBtn.classList.remove("hidden");
+                    shareStoryBtn.classList.remove("hidden");
                     
                     if (data.extracted_memory) {
                         extractedMemoryText.textContent = data.extracted_memory;
@@ -718,6 +752,39 @@
                 }
             } catch (error) {
                 alert(`通信エラー: ${error.message}`);
+            }
+        }
+
+        async function shareStory() {
+            const storyTextContent = document.getElementById("storyText").textContent;
+            if (!storyTextContent) {
+                alert("共有する物語がありません。");
+                return;
+            }
+
+            const shareData = {
+                title: 'Kizuna Memoryで作った物語',
+                text: `Kizuna Memoryで、こんな素敵な物語ができました！\n\n「${storyTextContent.substring(0, 150)}...」\n\n#KizunaMemory`,
+                url: window.location.href
+            };
+
+            // Web Share APIが使えるかチェック
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                    console.log('物語が正常に共有されました');
+                } catch (err) {
+                    console.error('共有に失敗しました:', err);
+                }
+            } else {
+                // フォールバック: クリップボードにコピー
+                try {
+                    await navigator.clipboard.writeText(`${shareData.text}\n\n${shareData.url}`);
+                    alert('物語のテキストとURLをクリップボードにコピーしました！\nSNSなどに貼り付けて共有してください。');
+                } catch (err) {
+                    console.error('クリップボードへのコピーに失敗しました:', err);
+                    alert('共有機能が利用できませんでした。');
+                }
             }
         }
 
