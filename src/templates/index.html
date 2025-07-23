@@ -156,9 +156,6 @@
                             <button id="continueStoryBtn" class="large-button bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl hidden transition-all">
                                 📝 続きを作る
                             </button>
-                            <button id="shareStoryBtn" class="large-button bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl hidden transition-all">
-                                🔗 共有する
-                            </button>
                         </div>
                     </div>
                     <div id="storyText" class="story-text text-gray-700 whitespace-pre-wrap leading-relaxed"></div>
@@ -437,7 +434,7 @@
 
             container.innerHTML = stories.map(story => {
                 const buttonHtml = story.is_sample
-                    ? `<a href="https://www.genspark.ai/autopilotagent_viewer?id=1ab88434-fb52-48d1-b08e-4256c900deb0" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-all font-semibold">絵本を見る 📖</a>`
+                    ? `<a href="storybook_sample.html" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-all font-semibold">絵本を見る 📖</a>`
                     : `<button onclick="showFullStory('${story.id}')" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all">全文を読む</button>`;
 
                 const imageHtml = story.image_path
@@ -600,10 +597,6 @@
                 document.getElementById("continuationSection").classList.remove("hidden");
             });
 
-            document.getElementById("shareStoryBtn").addEventListener("click", () => {
-                shareStory();
-            });
-
             document.querySelectorAll(".continuation-btn").forEach(btn => {
                 btn.addEventListener("click", () => {
                     generateContinuation(btn.dataset.type);
@@ -619,14 +612,12 @@
             const extractedMemoryText = document.getElementById("extractedMemoryText");
             const playStoryBtn = document.getElementById("playStoryBtn");
             const continueStoryBtn = document.getElementById("continueStoryBtn");
-            const shareStoryBtn = document.getElementById("shareStoryBtn");
 
             if (!memoryInput.trim() && !recordedAudioData) {
                 alert("記憶を入力するか、音声を録音してください。");
                 return;
             }
 
-            // 各要素をリセット
             storyText.textContent = "";
             extractedMemory.classList.add("hidden");
             playStoryBtn.classList.add("hidden");
@@ -666,7 +657,6 @@
                     currentStoryId = data.story_id;
                     playStoryBtn.classList.remove("hidden");
                     continueStoryBtn.classList.remove("hidden");
-                    shareStoryBtn.classList.remove("hidden");
                     
                     if (data.extracted_memory) {
                         extractedMemoryText.textContent = data.extracted_memory;
@@ -752,39 +742,6 @@
                 }
             } catch (error) {
                 alert(`通信エラー: ${error.message}`);
-            }
-        }
-
-        async function shareStory() {
-            const storyTextContent = document.getElementById("storyText").textContent;
-            if (!storyTextContent) {
-                alert("共有する物語がありません。");
-                return;
-            }
-
-            const shareData = {
-                title: 'Kizuna Memoryで作った物語',
-                text: `Kizuna Memoryで、こんな素敵な物語ができました！\n\n「${storyTextContent.substring(0, 150)}...」\n\n#KizunaMemory`,
-                url: window.location.href
-            };
-
-            // Web Share APIが使えるかチェック
-            if (navigator.share) {
-                try {
-                    await navigator.share(shareData);
-                    console.log('物語が正常に共有されました');
-                } catch (err) {
-                    console.error('共有に失敗しました:', err);
-                }
-            } else {
-                // フォールバック: クリップボードにコピー
-                try {
-                    await navigator.clipboard.writeText(`${shareData.text}\n\n${shareData.url}`);
-                    alert('物語のテキストとURLをクリップボードにコピーしました！\nSNSなどに貼り付けて共有してください。');
-                } catch (err) {
-                    console.error('クリップボードへのコピーに失敗しました:', err);
-                    alert('共有機能が利用できませんでした。');
-                }
             }
         }
 

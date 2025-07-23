@@ -111,6 +111,10 @@ def save_user_story(story_data):
 def index():
     return render_template('index.html')
 
+@app.route('/storybook_sample.html')
+def storybook_sample():
+    return render_template('storybook_sample.html')
+
 @app.route('/api/get_prompts/<category>')
 def get_prompts(category):
     """指定されたカテゴリのプロンプトを取得"""

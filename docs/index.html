@@ -437,7 +437,7 @@
 
             container.innerHTML = stories.map(story => {
                 const buttonHtml = story.is_sample
-                    ? `<a href="https://www.genspark.ai/autopilotagent_viewer?id=1ab88434-fb52-48d1-b08e-4256c900deb0" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-all font-semibold">絵本を見る 📖</a>`
+                    ? `<a href="storybook_sample.html" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-all font-semibold">絵本を見る 📖</a>`
                     : `<button onclick="showFullStory('${story.id}')" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all">全文を読む</button>`;
 
                 const imageHtml = story.image_path

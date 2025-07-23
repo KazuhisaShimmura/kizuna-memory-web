@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絵本：ひかりのびょうとう - Kizuna Memory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Yomogi&display=swap');
+        body {
+            font-family: 'Yomogi', cursive;
+            background-color: #fdfaf6;
+        }
+        .page {
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+        .story-text {
+            font-size: 1.5rem; /* 24px */
+            line-height: 2.5rem;
+            color: #4a4a4a;
+            white-space: pre-wrap;
+        }
+        .back-button {
+            display: inline-block;
+            margin: 1rem 0;
+            padding: 0.75rem 1.5rem;
+            background-color: #818cf8;
+            color: white;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #6366f1;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="container mx-auto max-w-4xl text-center">
+        <a href="index.html" class="back-button">🏠 アプリに戻る</a>
+    </div>
+
+    <!-- ページ1: タイトル -->
+    <div class="page">
+        <h1 class="text-4xl font-bold text-center text-gray-700 mb-4">ひかりのびょうとう</h1>
+        <p class="text-center text-xl text-gray-500">Kizuna Memoryより</p>
+    </div>
+
+    <!-- ページ2: 物語の始まり -->
+    <div class="page">
+        <p class="story-text">ひかりは、病室の窓から外を眺めるのが日課でした。
+空の色、雲の形、遠くの街のまたたき。
+小さな窓は、彼女にとって世界とつながる大きなキャンバスでした。</p>
+    </div>
+
+    <!-- ページ3: 画像 -->
+    <div class="page">
+        <img src="images/sample_story_image.png" alt="窓から外を眺めるひかり" class="rounded-lg shadow-lg mx-auto w-full">
+    </div>
+
+    <!-- ページ4: 物語の続き -->
+    <div class="page">
+        <p class="story-text">ある日、向かいのビルの窓に、同じように外を眺める男の子の姿を見つけます。
+男の子もまた、毎日同じ時間に窓辺に座っていました。
+二人は言葉を交わすことはありませんでしたが、窓越しの静かな時間が、二人だけの秘密の約束のようになりました。</p>
+    </div>
+    
+    <!-- ページ5: 結び -->
+    <div class="page">
+        <p class="story-text">退院の日、ひかりは男の子の窓に「ありがとう」と書いた紙を貼りました。
+男の子は、にっこりと笑って大きく手を振ってくれました。
+ひかりは、病院での日々が決して寂しいだけではなかったことを、窓越しの小さな光が教えてくれたことを、ずっと忘れないでしょう。</p>
+    </div>
+
+    <div class="text-center my-8">
+        <p class="text-gray-500">- おしまい -</p>
+        <a href="index.html" class="back-button mt-4">🏠 アプリに戻る</a>
+    </div>
+
+</body>
+</html>
