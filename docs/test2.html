@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思い出から生まれた物語 - ひかりのびょうとう制作記録</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            line-height: 1.8;
+        }
+        .chat-bubble-ai {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .chat-bubble-human {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .story-section {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+        .memory-highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(168, 237, 234, 0.5); }
+            to { box-shadow: 0 0 20px rgba(254, 214, 227, 0.8); }
+        }
+        .page-break {
+            page-break-inside: avoid;
+        }
+    </style>
+</head>
+        <!-- Story Generation Section from test.html -->
+        <div class="story-section p-8 rounded-lg shadow-lg mb-8 page-break">
+            <h2 class="text-3xl font-bold text-center text-white mb-8">
+                <i class="fas fa-magic text-yellow-300 mr-3"></i>
+                🌟 あなたの思い出が物語になりました 🌟
+            </h2>
+            
+            <div class="bg-white rounded-lg p-6 shadow-inner">
+                <h3 class="text-2xl font-bold text-center text-gray-800 mb-6">
+                    ✅ 表紙『ひかりのびょうとう』
+                </h3>
+                
+                <div class="space-y-6">
+                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                        <h4 class="font-bold text-lg text-blue-800 mb-2">📖 1ページ：いつもとちがう春</h4>
+                        <p class="text-gray-700 italic">「あるはるのひ、せかいじゅうで『コロナ』というびょうきがひろがりはじめました。びょういんも、まちのひとも、こころがざわざわしていました。」</p>
+                        <p class="text-sm text-blue-600 mt-2">💭 田中さんの記憶：「町中がざわざわしていた」「誰もが不安だった」</p>
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                        <h4 class="font-bold text-lg text-green-800 mb-2">📖 2ページ：ひかりびょういんのきもち</h4>
+                        <p class="text-gray-700 italic">「『わたしたちにできることはなんだろう？』ひかりびょういんのスタッフたちは、みんなでかんがえました。」</p>
+                        <p class="text-sm text-green-600 mt-2">💭 田中さんの記憶：「みんなで円になって座って話し合った」</p>
+                    </div>
+
+                    <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+                        <h4 class="font-bold text-lg text-purple-800 mb-2">📖 3ページ：びょうとうをつくろう</h4>
+                        <p class="text-gray-700 italic">「『コロナせんようのびょうとうをつくろう！』みんなが、ちがうしごとをしながら、ひとつのチームになりました。」</p>
+                        <p class="text-sm text-purple-600 mt-2">💭 田中さんの記憶：「設計図を広げて、ベッドの配置を考えて」</p>
+                    </div>
+
+                    <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+                        <h4 class="font-bold text-lg text-red-800 mb-2">📖 4ページ：こわさとたたかいながら</h4>
+                        <p class="text-gray-700 italic">「はじめてのことばかり。こわさも、つかれも、たくさんありました。でも、だれかの『ありがとう』で、ちょっとだけほっとします。」</p>
+                        <p class="text-sm text-red-600 mt-2">💭 田中さんの記憶：「怖さもあった」「患者さんからのありがとうの一言」</p>
+                    </div>
+
+                    <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                        <h4 class="font-bold text-lg text-yellow-800 mb-2">📖 5ページ：ひかりがともる</h4>
+                        <p class="text-gray-700 italic">「あるひ、いっぴきのねこがびょうとうにまよいこみました。スタッフとびょうにんは、すこしだけわらいました。そのひから、『ひかりびょうとう』とよばれるようになりました。」</p>
+                        <p class="text-sm text-yellow-600 mt-2">💭 田中さんの記憶：「猫が迷い込んできた」「みんな笑顔になった」</p>
+                    </div>
+
+                    <div class="bg-pink-50 p-4 rounded-lg border-l-4 border-pink-500">
+                        <h4 class="font-bold text-lg text-pink-800 mb-2">📖 6ページ：ともにいきるということ</h4>
+                        <p class="text-gray-700 italic">「ひとりひとりがだいじ。だれかのいのちをまもることは、じぶんのいのちをたいせつにすることなんだ。」</p>
+                        <p class="text-sm text-pink-600 mt-2">💭 田中さんの記憶：「一人ひとりが本当に大切」「手を取り合って」</p>
+                    </div>
+
+                    <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                        <h4 class="font-bold text-lg text-indigo-800 mb-2">📖 7ページ：これからも</h4>
+                        <p class="text-gray-700 italic">「コロナがおちついたあとも、ひかりびょうとうでは『ひと』をたいせつにするケアがつづいています。」</p>
+                        <p class="text-sm text-indigo-600 mt-2">💭 田中さんの記憶：「今でも『ひと』を大切にするケアを続けている」</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final AI Message -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-ai text-white p-6 rounded-lg shadow-lg mb-4">
+                <div class="flex items-start">
+                    <i class="fas fa-robot text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">AI アシスタント</h3>
+                        <p>田中さん、素晴らしいお話をありがとうございました。あなたの貴重な体験と思い出が、美しい物語として生まれ変わりました。</p>
+                        <p class="mt-3">この物語は、コロナ禍という困難な時期に、医療従事者の皆さんがどのように協力し、支え合い、命を守り続けたかを、子どもたちにも分かりやすく伝える大切な記録となるでしょう。</p>
+                        <p class="mt-3 font-semibold">✨ 今日のセッションで抽出された物語が、「ひかりのびょうとう」として完成しました。</p>
+                        <p class="mt-4">この物語を、素敵な絵本にしてみませんか？</p>
+                        <a href="storybook_sample.html" target="_blank" rel="noopener noreferrer" class="mt-6 inline-block bg-purple-500 hover:bg-purple-600 text-white font-bold px-6 py-3 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                            <i class="fas fa-book-open mr-2"></i>
+                            絵本を作る
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center py-8 page-break">
+            <div class="bg-white rounded-lg shadow-lg p-6 mx-auto max-w-2xl">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-heart text-red-500 mr-2"></i>
+                    記憶の力、物語の力
+                </h3>
+                <p class="text-gray-600">
+                    個人の大切な思い出や体験が、AIとの对話を通じて普遍的な物語として生まれ変わる。<br>
+                    それは次の世代へと受け継がれる、かけがえのない贈り物です。
+                </p>
+                <div class="mt-6 text-sm text-gray-500">
+                    <p><i class="fas fa-clock mr-1"></i> セッション時間：90分</p>
+                    <p><i class="fas fa-comments mr-1"></i> 対話回数：12回</p>
+                    <p><i class="fas fa-book mr-1"></i> 生成された物語：「ひかりのびょうとう」（全7ページ）</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

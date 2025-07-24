@@ -412,11 +412,11 @@
             const sampleStory = {
                 id: 'sample-hikari-no-byoto',
                 created_at: new Date().toISOString(),
-                memory_text: '病院の窓から見た景色の思い出。',
-                story: 'ひかりは、病室の窓から外を眺めるのが日課でした。空の色、雲の形、遠くの街のまたたき。小さな窓は、彼女にとって世界とつながる大きなキャンバスでした。ある日、向かいのビルの窓に、同じように外を眺める男の子の姿を見つけます。...',
+                memory_text: 'コロナ専用病棟を作った時の思い出。',
+                story: 'びょういんのみんなが、いのちをまもったおはなし。あるはるのひ、せかいじゅうで「コロナ」というびょうきがひろがりはじめました。...',
                 has_image: true,
                 has_audio: false,
-                image_path: 'images/sample_story_image.png', // 画像へのパス
+                image_path: 'images/page3.png', // 画像へのパス
                 is_sample: true // サンプルであることを示すフラグ
             };
             displayStoryHistory([sampleStory]);
@@ -437,7 +437,9 @@
 
             container.innerHTML = stories.map(story => {
                 const buttonHtml = story.is_sample
-                    ? `<a href="storybook_sample.html" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-all font-semibold">絵本を見る 📖</a>`
+                    ? `<a href="test.html" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg transition-all font-semibold mr-2 mb-2">対話の過程を見る 📝</a>
+                       <a href="storybook_sample.html" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-all font-semibold mr-2 mb-2">完成した物語を見る 📖</a>
+                       <a href="storybook_sample.html" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-purple-500 hover:bg-purple-600 text-white px-4 py-3 rounded-lg transition-all font-semibold mb-2">絵本を見る 🎨</a>`
                     : `<button onclick="showFullStory('${story.id}')" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all">全文を読む</button>`;
 
                 const imageHtml = story.image_path
@@ -467,7 +469,9 @@
                     <div class="story-text text-gray-700 leading-relaxed">
                         ${story.story.substring(0, 200)}${story.story.length > 200 ? '...' : ''}
                     </div>
-                    ${buttonHtml}
+                    <div class="flex flex-wrap">
+                        ${buttonHtml}
+                    </div>
                 </div>
             `}).join('');
         }
