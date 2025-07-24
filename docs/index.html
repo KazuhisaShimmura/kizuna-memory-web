@@ -443,7 +443,7 @@
                     : `<button onclick="showFullStory('${story.id}')" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all">全文を読む</button>`;
 
                 const imageHtml = story.image_path
-                    ? `<div class="my-4 text-center"><img src="${story.image_path}" alt="物語の画像" class="rounded-lg shadow-md max-w-xs inline-block"></div>`
+                    ? `<div class="my-4"><img src="${story.image_path}" alt="物語の画像" class="rounded-lg shadow-md w-full max-w-xs h-auto mx-auto block"></div>`
                     : '';
 
                 const memoryTextHtml = story.memory_text
