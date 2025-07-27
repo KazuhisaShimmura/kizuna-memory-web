@@ -99,25 +99,32 @@
 
                 <!-- 記憶入力セクション -->
                 <div class="mb-6">
-                    <label for="memoryInput" class="block text-gray-700 text-xl font-bold mb-4">📝 思い出を聞かせてください：</label>
-                    <textarea id="memoryInput" class="shadow-lg border-2 border-gray-200 rounded-lg w-full py-4 px-6 text-gray-700 leading-relaxed focus:outline-none focus:border-blue-400 focus:shadow-xl h-40 large-text" placeholder="ここに思い出を自由に書いてください。どんな小さなことでも大丈夫です。"></textarea>
-                </div>
+                    <label class="block text-gray-700 text-xl font-bold mb-4">📝 思い出の伝え方を選んでください：</label>
+                    <div class="flex gap-4 mb-4">
+                        <button id="selectTextBtn" class="large-button bg-blue-500 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl transition-all">テキストで入力</button>
+                        <button id="selectVoiceBtn" class="large-button bg-gray-400 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl transition-all">音声で入力</button>
+                    </div>
 
-                <!-- 音声録音セクション -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-xl font-bold mb-4">🎤 音声で思い出を話す（任意）：</label>
-                    <div class="bg-orange-50 p-6 rounded-lg border-2 border-orange-200">
-                        <div class="flex flex-wrap items-center gap-4 mb-4">
-                            <button id="recordBtn" class="large-button bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl transition-all">
-                                🎤 録音開始
-                            </button>
-                            <button id="stopRecordBtn" class="large-button bg-gray-500 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl transition-all" disabled>
-                                ⏹️ 録音停止
-                            </button>
-                            <span id="recordingStatus" class="large-text text-gray-600"></span>
-                        </div>
-                        <div id="audioPreview" class="hidden">
-                            <audio id="recordedAudio" controls class="w-full"></audio>
+                    <!-- テキスト入力エリア -->
+                    <div id="textInputSection">
+                        <textarea id="memoryInput" class="shadow-lg border-2 border-gray-200 rounded-lg w-full py-4 px-6 text-gray-700 leading-relaxed focus:outline-none focus:border-blue-400 focus:shadow-xl h-40 large-text" placeholder="ここに思い出を自由に書いてください。どんな小さなことでも大丈夫です。"></textarea>
+                    </div>
+
+                    <!-- 音声録音エリア -->
+                    <div id="voiceInputSection" class="hidden">
+                        <div class="bg-orange-50 p-6 rounded-lg border-2 border-orange-200">
+                            <div class="flex flex-wrap items-center gap-4 mb-4">
+                                <button id="recordBtn" class="large-button bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl transition-all">
+                                    🎤 録音開始
+                                </button>
+                                <button id="stopRecordBtn" class="large-button bg-gray-500 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl transition-all" disabled>
+                                    ⏹️ 録音停止
+                                </button>
+                                <span id="recordingStatus" class="large-text text-gray-600"></span>
+                            </div>
+                            <div id="audioPreview" class="hidden">
+                                <audio id="recordedAudio" controls class="w-full"></audio>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -136,7 +143,7 @@
                 <!-- 物語生成ボタン -->
                 <div class="flex justify-center mb-8">
                     <button id="generateStoryBtn" class="large-button bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold rounded-xl focus:outline-none focus:shadow-xl transform hover:scale-105 transition-all">
-                        ✨ 心温まる物語を作る ✨
+                        対話を開始する
                     </button>
                 </div>
 
@@ -148,13 +155,13 @@
                 <!-- 物語出力セクション -->
                 <div id="storyOutput" class="bg-gradient-to-br from-yellow-50 to-orange-50 p-8 rounded-xl border-2 border-yellow-200 shadow-lg min-h-[200px]">
                     <div class="flex flex-wrap justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-800">📖 あなたの物語</h2>
+                        <h2 class="text-2xl font-bold text-gray-800">💬 AIとの対話</h2>
                         <div class="flex flex-wrap gap-3">
-                            <button id="playStoryBtn" class="large-button bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl hidden transition-all">
-                                🔊 音声で聞く
+                            <button id="continueDialogueBtn" class="large-button bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl hidden transition-all">
+                                💬 対話を続ける
                             </button>
-                            <button id="continueStoryBtn" class="large-button bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl hidden transition-all">
-                                📝 続きを作る
+                            <button id="endDialogueBtn" class="large-button bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-lg focus:outline-none focus:shadow-xl hidden transition-all">
+                                ✅ 対話を記録して終了する
                             </button>
                         </div>
                     </div>
@@ -213,6 +220,18 @@
         let currentPrompts = [];
         let allStories = []; // 物語履歴全体を保持する変数
         let currentPromptIndex = 0;
+        const STATIC_URL = "{{ static_url }}"; // Flaskから渡されたstaticファイルのURL
+
+        // ヘルパー関数: 画像パスを適切に生成
+        function getStaticImagePath(filename) {
+            // STATIC_URLが定義されており、かつJinja2のプレースホルダーでない場合（Flask経由の場合）
+            if (typeof STATIC_URL !== 'undefined' && STATIC_URL !== '{{ static_url }}') {
+                return `${STATIC_URL}/images/${filename}`;
+            } else {
+                // 直接docs/index.htmlを開いた場合や、開発環境の場合
+                return `../static/images/${filename}`;
+            }
+        }
 
         // Pythonサーバーから取得していたプロンプト情報をここに直接定義
         const REMINISCENCE_PROMPTS = {
@@ -409,11 +428,11 @@
             const sampleStory = {
                 id: 'sample-hikari-no-byoto',
                 created_at: new Date().toISOString(),
-                memory_text: '病院の窓から見た景色の思い出。',
-                story: 'ひかりは、病室の窓から外を眺めるのが日課でした。空の色、雲の形、遠くの街のまたたき。小さな窓は、彼女にとって世界とつながる大きなキャンバスでした。ある日、向かいのビルの窓に、同じように外を眺める男の子の姿を見つけます。...',
+                memory_text: 'コロナ専用病棟を作った時の思い出。',
+                story: 'びょういんのみんなが、いのちをまもったおはなし。あるはるのひ、せかいじゅうで「コロナ」というびょうきがひろがりはじめました。...',
                 has_image: true,
                 has_audio: false,
-                image_path: 'images/sample_story_image.png', // 画像へのパス
+                image_path: 'page3.png', // 画像へのパス
                 is_sample: true // サンプルであることを示すフラグ
             };
             displayStoryHistory([sampleStory]);
@@ -434,15 +453,19 @@
 
             container.innerHTML = stories.map(story => {
                 const buttonHtml = story.is_sample
-                    ? `<a href="storybook_sample.html" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-all font-semibold">絵本を見る 📖</a>`
+                    ? `<a href="test.html" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg transition-all font-semibold mr-2 mb-2">対話の過程を見る 📝</a>
+                       <a href="test2.html" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg transition-all font-semibold mr-2 mb-2">完成した物語を見る 📖</a>
+                       <a href="storybook_sample.html" target="_blank" rel="noopener noreferrer" class="mt-4 inline-block bg-purple-500 hover:bg-purple-600 text-white px-4 py-3 rounded-lg transition-all font-semibold mb-2">絵本を見る 🎨</a>`
                     : `<button onclick="showFullStory('${story.id}')" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all">全文を読む</button>`;
 
-                const imageHtml = story.image_path
-                    ? `<div class="my-4"><img src="${story.image_path}" alt="物語の画像" class="rounded-lg shadow-md w-full max-w-xs h-auto mx-auto block"></div>`
+                const imageHtml = story.has_image && story.image_path
+                    ? `<div class="my-4"><img src="${getStaticImagePath(story.image_path)}" alt="物語の画像" class="rounded-lg shadow-md w-full max-w-xs h-auto mx-auto block"></div>`
                     : '';
 
                 const memoryTextHtml = story.memory_text
-                    ? `<div class="mb-4 p-3 bg-gray-50 rounded-lg"><div class="text-sm font-semibold text-gray-600 mb-1">あなたの記憶:</div><div class="text-gray-700">${story.memory_text.substring(0, 100)}${story.memory_text.length > 100 ? '...' : ''}</div></div>`
+                    ? `<div class="mb-4 p-3 bg-gray-50 rounded-lg"><div class="text-sm font-semibold text-gray-600 mb-1">あなたの記憶:</div><div class="text-gray-700">${
+                        story.memory_text.substring(0, 100)
+                    }${story.memory_text.length > 100 ? '...' : ''}</div></div>`
                     : '';
 
                 return `
@@ -450,8 +473,12 @@
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex-1">
                             <div class="text-sm text-gray-500 mb-2">
-                                ${new Date(story.created_at).toLocaleDateString('ja-JP')} 
-                                ${new Date(story.created_at).toLocaleTimeString('ja-JP', {hour: '2-digit', minute: '2-digit'})}
+                                ${
+                                    new Date(story.created_at).toLocaleDateString('ja-JP')
+                                } 
+                                ${
+                                    new Date(story.created_at).toLocaleTimeString('ja-JP', {hour: '2-digit', minute: '2-digit'})
+                                }
                             </div>
                             <div class="flex gap-2 mb-3">
                                 ${story.has_image ? '<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">📷 画像</span>' : ''}
@@ -462,9 +489,13 @@
                     ${memoryTextHtml}
                     ${imageHtml}
                     <div class="story-text text-gray-700 leading-relaxed">
-                        ${story.story.substring(0, 200)}${story.story.length > 200 ? '...' : ''}
+                        ${
+                            story.story.substring(0, 200)
+                        }${story.story.length > 200 ? '...' : ''}
                     </div>
-                    ${buttonHtml}
+                    <div class="flex flex-wrap">
+                        ${buttonHtml}
+                    </div>
                 </div>
             `}).join('');
         }
@@ -597,10 +628,38 @@
                 document.getElementById("continuationSection").classList.remove("hidden");
             });
 
+            document.getElementById("shareStoryBtn").addEventListener("click", () => {
+                shareStory();
+            });
+
             document.querySelectorAll(".continuation-btn").forEach(btn => {
                 btn.addEventListener("click", () => {
                     generateContinuation(btn.dataset.type);
                 });
+            });
+
+            // Add event listeners for input method selection
+            const selectTextBtn = document.getElementById('selectTextBtn');
+            const selectVoiceBtn = document.getElementById('selectVoiceBtn');
+            const textInputSection = document.getElementById('textInputSection');
+            const voiceInputSection = document.getElementById('voiceInputSection');
+
+            selectTextBtn.addEventListener('click', () => {
+                textInputSection.classList.remove('hidden');
+                voiceInputSection.classList.add('hidden');
+                selectTextBtn.classList.remove('bg-gray-400');
+                selectTextBtn.classList.add('bg-blue-500');
+                selectVoiceBtn.classList.remove('bg-blue-500');
+                selectVoiceBtn.classList.add('bg-gray-400');
+            });
+
+            selectVoiceBtn.addEventListener('click', () => {
+                textInputSection.classList.add('hidden');
+                voiceInputSection.classList.remove('hidden');
+                selectVoiceBtn.classList.remove('bg-gray-400');
+                selectVoiceBtn.classList.add('bg-blue-500');
+                selectTextBtn.classList.remove('bg-blue-500');
+                selectTextBtn.classList.add('bg-gray-400');
             });
         }
 
@@ -612,12 +671,14 @@
             const extractedMemoryText = document.getElementById("extractedMemoryText");
             const playStoryBtn = document.getElementById("playStoryBtn");
             const continueStoryBtn = document.getElementById("continueStoryBtn");
+            const shareStoryBtn = document.getElementById("shareStoryBtn");
 
             if (!memoryInput.trim() && !recordedAudioData) {
                 alert("記憶を入力するか、音声を録音してください。");
                 return;
             }
 
+            // 各要素をリセット
             storyText.textContent = "";
             extractedMemory.classList.add("hidden");
             playStoryBtn.classList.add("hidden");
@@ -642,7 +703,7 @@
                     requestData.audio_data = recordedAudioData;
                 }
 
-                const response = await fetch("/api/generate_story", {
+                const response = await fetch("/api/start_dialogue", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -657,6 +718,7 @@
                     currentStoryId = data.story_id;
                     playStoryBtn.classList.remove("hidden");
                     continueStoryBtn.classList.remove("hidden");
+                    shareStoryBtn.classList.remove("hidden");
                     
                     if (data.extracted_memory) {
                         extractedMemoryText.textContent = data.extracted_memory;
@@ -670,7 +732,7 @@
                     // 物語数を更新
                     loadStoryCount();
                 } else {
-                    storyText.textContent = `エラー: ${data.error || "物語の生成に失敗しました。"}`;
+                    storyText.textContent = `エラー: ${data.error || "対話の開始に失敗しました。"}`;
                 }
             } catch (error) {
                 storyText.textContent = `通信エラー: ${error.message}`;
@@ -681,15 +743,15 @@
 
         async function generateContinuation(type) {
             if (!currentStoryId) {
-                alert("物語を先に生成してください。");
+                alert("対話を先に開始してください。");
                 return;
             }
 
             const continuationText = document.getElementById("continuationText");
-            continuationText.textContent = "続きを生成中...";
+            continuationText.textContent = "対話の続きを生成中...";
 
             try {
-                const response = await fetch("/api/continue_story", {
+                const response = await fetch("/api/continue_dialogue", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -742,6 +804,41 @@
                 }
             } catch (error) {
                 alert(`通信エラー: ${error.message}`);
+            }
+        }
+
+        async function shareStory() {
+            const storyTextContent = document.getElementById("storyText").textContent;
+            if (!storyTextContent) {
+                alert("共有する物語がありません。");
+                return;
+            }
+
+            const shareData = {
+                title: 'Kizuna Memoryで作った物語',
+                text: `Kizuna Memoryで、こんな素敵な物語ができました！\n\n「${
+                    storyTextContent.substring(0, 150)
+                }...」\n\n#KizunaMemory`,
+                url: window.location.href
+            };
+
+            // Web Share APIが使えるかチェック
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                    console.log('物語が正常に共有されました');
+                } catch (err) {
+                    console.error('共有に失敗しました:', err);
+                }
+            } else {
+                // フォールバック: クリップボードにコピー
+                try {
+                    await navigator.clipboard.writeText(`${shareData.text}\n\n${shareData.url}`);
+                    alert('物語のテキストとURLをクリップボードにコピーしました！\nSNSなどに貼り付けて共有してください。');
+                } catch (err) {
+                    console.error('クリップボードへのコピーに失敗しました:', err);
+                    alert('共有機能が利用できませんでした。');
+                }
             }
         }
 

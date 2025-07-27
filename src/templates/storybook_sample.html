@@ -3,87 +3,383 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>絵本：ひかりのびょうとう - Kizuna Memory</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>ひかりのびょうとう - Web絵本</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Yomogi&display=swap');
         body {
-            font-family: 'Yomogi', cursive;
-            background-color: #fdfaf6;
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .book-container {
+            background: #f8f9fa;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-radius: 20px;
         }
         .page {
-            width: 100%;
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            border: 1px solid #eee;
+            min-height: 80vh;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
-        .story-text {
-            font-size: 1.5rem; /* 24px */
-            line-height: 2.5rem;
-            color: #4a4a4a;
-            white-space: pre-wrap;
+        .page-image {
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .back-button {
-            display: inline-block;
-            margin: 1rem 0;
-            padding: 0.75rem 1.5rem;
-            background-color: #818cf8;
-            color: white;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s;
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
-        .back-button:hover {
-            background-color: #6366f1;
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #d1d5db;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .nav-dot.active {
+            background: #667eea;
+            transform: scale(1.2);
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .title-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="container mx-auto max-w-4xl text-center">
-        <a href="index.html" class="back-button">🏠 アプリに戻る</a>
+<body class="min-h-screen p-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8 fade-in">
+            <h1 class="text-4xl md:text-6xl font-bold title-gradient mb-4">ひかりのびょうとう</h1>
+            <p class="text-gray-600 text-lg">びょういんのみんなが、いのちをまもったおはなし</p>
+        </div>
+
+        <!-- Book Container -->
+        <div class="book-container p-6 mb-20">
+            <!-- Cover Page -->
+            <div id="page-0" class="page p-8 mb-8 fade-in">
+                <div class="flex flex-col lg:flex-row items-center gap-8 h-full">
+                    <div class="lg:w-1/2">
+                        <img src="../static/images/cover.png" alt="表紙" class="w-full h-auto page-image">
+                    </div>
+                    <div class="lg:w-1/2 text-center lg:text-left">
+                        <h2 class="text-3xl md:text-5xl font-bold title-gradient mb-6">ひかりのびょうとう</h2>
+                        <p class="text-xl md:text-2xl text-gray-700 leading-relaxed">びょういんのみんなが、<br>いのちをまもった<br>おはなし</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 1 -->
+            <div id="page-1" class="page p-8 mb-8 hidden">
+                <div class="flex flex-col lg:flex-row items-center gap-8 h-full">
+                    <div class="lg:w-1/2">
+                        <img src="../static/images/page1.png" alt="1ページ" class="w-full h-auto page-image">
+                    </div>
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl md:text-3xl font-bold text-purple-700 mb-6">いつもとちがう春</h3>
+                        <p class="text-lg md:text-xl text-gray-800 leading-relaxed">
+                            あるはるのひ、せかいじゅうで「コロナ」というびょうきがひろがりはじめました。<br><br>
+                            びょういんも、まちのひとも、こころがざわざわしていました。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 2 -->
+            <div id="page-2" class="page p-8 mb-8 hidden">
+                <div class="flex flex-col lg:flex-row items-center gap-8 h-full">
+                    <div class="lg:w-1/2">
+                        <img src="../static/images/page2.png" alt="2ページ" class="w-full h-auto page-image">
+                    </div>
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl md:text-3xl font-bold text-purple-700 mb-6">ひかりびょういんのきもち</h3>
+                        <p class="text-lg md:text-xl text-gray-800 leading-relaxed">
+                            「わたしたちにできることはなんだろう？」<br><br>
+                            ひかりびょういんのスタッフたちは、みんなでかんがえました。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3 -->
+            <div id="page-3" class="page p-8 mb-8 hidden">
+                <div class="flex flex-col lg:flex-row items-center gap-8 h-full">
+                    <div class="lg:w-1/2">
+                        <img src="../static/images/page3.png" alt="3ページ" class="w-full h-auto page-image">
+                    </div>
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl md:text-3xl font-bold text-purple-700 mb-6">びょうとうをつくろう</h3>
+                        <p class="text-lg md:text-xl text-gray-800 leading-relaxed">
+                            「コロナせんようのびょうとうをつくろう！」<br><br>
+                            みんなが、ちがうしごとをしながら、ひとつのチームになりました。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 4 -->
+            <div id="page-4" class="page p-8 mb-8 hidden">
+                <div class="flex flex-col lg:flex-row items-center gap-8 h-full">
+                    <div class="lg:w-1/2">
+                        <img src="../static/images/page4.png" alt="4ページ" class="w-full h-auto page-image">
+                    </div>
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl md:text-3xl font-bold text-purple-700 mb-6">こわさとたたかいながら</h3>
+                        <p class="text-lg md:text-xl text-gray-800 leading-relaxed">
+                            はじめてのことばかり。<br>
+                            こわさも、つかれも、たくさんありました。<br><br>
+                            でも、だれかの「ありがとう」で、ちょっとだけほっとします。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 5 -->
+            <div id="page-5" class="page p-8 mb-8 hidden">
+                <div class="flex flex-col lg:flex-row items-center gap-8 h-full">
+                    <div class="lg:w-1/2">
+                        <img src="../static/images/page5.png" alt="5ページ" class="w-full h-auto page-image">
+                    </div>
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl md:text-3xl font-bold text-purple-700 mb-6">ひかりがともる</h3>
+                        <p class="text-lg md:text-xl text-gray-800 leading-relaxed">
+                            あるひ、いっぴきのねこがびょうとうにまよいこみました。<br><br>
+                            スタッフとびょうにんは、すこしだけわらいました。<br><br>
+                            そのひから、「ひかりびょうとう」とよばれるようになりました。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 6 -->
+            <div id="page-6" class="page p-8 mb-8 hidden">
+                <div class="flex flex-col lg:flex-row items-center gap-8 h-full">
+                    <div class="lg:w-1/2">
+                        <img src="../static/images/page6.png" alt="6ページ" class="w-full h-auto page-image">
+                    </div>
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl md:text-3xl font-bold text-purple-700 mb-6">ともにいきるということ</h3>
+                        <p class="text-lg md:text-xl text-gray-800 leading-relaxed">
+                            ひとりひとりがだいじ。<br><br>
+                            だれかのいのちをまもることは、<br>
+                            じぶんのいのちをたいせつにすることなんだ。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 7 -->
+            <div id="page-7" class="page p-8 mb-8 hidden">
+                <div class="flex flex-col lg:flex-row items-center gap-8 h-full">
+                    <div class="lg:w-1/2">
+                        <img src="../static/images/page7.png" alt="7ページ" class="w-full h-auto page-image">
+                    </div>
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl md:text-3xl font-bold text-purple-700 mb-6">これからも</h3>
+                        <p class="text-lg md:text-xl text-gray-800 leading-relaxed">
+                            コロナがおちついたあとも、<br><br>
+                            ひかりびょうとうでは「ひと」をたいせつにするケアがつづいています。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back Cover -->
+            <div id="page-8" class="page p-8 mb-8 hidden">
+                <div class="flex flex-col items-center justify-center h-full text-center">
+                        <img src="../static/images/backcover.png" alt="裏表紙" class="w-full max-w-md mx-auto h-auto page-image mb-8">
+                    <h3 class="text-2xl md:text-3xl font-bold title-gradient mb-4">おわり</h3>
+                    <p class="text-gray-600 text-lg mb-8">ありがとうございました</p>
+                    <button id="shareBtn" class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold px-8 py-4 rounded-full shadow-lg transition-transform transform hover:scale-105 text-xl">
+                        <i class="fas fa-share-alt mr-2"></i> この絵本を共有する
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation flex items-center space-x-4">
+            <button id="prevBtn" class="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700 transition-colors">前へ</button>
+            <div class="flex space-x-2" id="navDots">
+                <!-- Navigation dots will be generated by JavaScript -->
+            </div>
+            <button id="nextBtn" class="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700 transition-colors">次へ</button>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-16 text-gray-600">
+            <p>&copy; 2025 ひかりのびょうとう - Web絵本</p>
+            <p class="mt-2">医療従事者の皆様に感謝を込めて</p>
+        </div>
     </div>
 
-    <!-- ページ1: タイトル -->
-    <div class="page">
-        <h1 class="text-4xl font-bold text-center text-gray-700 mb-4">ひかりのびょうとう</h1>
-        <p class="text-center text-xl text-gray-500">Kizuna Memoryより</p>
-    </div>
+    <script>
+        let currentPage = 0;
+        const totalPages = 9;
 
-    <!-- ページ2: 物語の始まり -->
-    <div class="page">
-        <p class="story-text">ひかりは、病室の窓から外を眺めるのが日課でした。
-空の色、雲の形、遠くの街のまたたき。
-小さな窓は、彼女にとって世界とつながる大きなキャンバスでした。</p>
-    </div>
+        // Generate navigation dots
+        function generateNavDots() {
+            const navDots = document.getElementById('navDots');
+            for (let i = 0; i < totalPages; i++) {
+                const dot = document.createElement('div');
+                dot.className = `nav-dot ${i === 0 ? 'active' : ''}`;
+                dot.addEventListener('click', () => goToPage(i));
+                navDots.appendChild(dot);
+            }
+        }
 
-    <!-- ページ3: 画像 -->
-    <div class="page">
-        <img src="images/sample_story_image.png" alt="窓から外を眺めるひかり" class="rounded-lg shadow-lg mx-auto w-full">
-    </div>
+        // Show specific page
+        function showPage(pageIndex) {
+            // Hide all pages
+            for (let i = 0; i < totalPages; i++) {
+                document.getElementById(`page-${i}`).classList.add('hidden');
+            }
+            
+            // Show current page
+            document.getElementById(`page-${pageIndex}`).classList.remove('hidden');
+            
+            // Update navigation dots
+            const dots = document.querySelectorAll('.nav-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === pageIndex);
+            });
 
-    <!-- ページ4: 物語の続き -->
-    <div class="page">
-        <p class="story-text">ある日、向かいのビルの窓に、同じように外を眺める男の子の姿を見つけます。
-男の子もまた、毎日同じ時間に窓辺に座っていました。
-二人は言葉を交わすことはありませんでしたが、窓越しの静かな時間が、二人だけの秘密の約束のようになりました。</p>
-    </div>
-    
-    <!-- ページ5: 結び -->
-    <div class="page">
-        <p class="story-text">退院の日、ひかりは男の子の窓に「ありがとう」と書いた紙を貼りました。
-男の子は、にっこりと笑って大きく手を振ってくれました。
-ひかりは、病院での日々が決して寂しいだけではなかったことを、窓越しの小さな光が教えてくれたことを、ずっと忘れないでしょう。</p>
-    </div>
+            // Update button states
+            document.getElementById('prevBtn').disabled = pageIndex === 0;
+            document.getElementById('nextBtn').disabled = pageIndex === totalPages - 1;
+        }
 
-    <div class="text-center my-8">
-        <p class="text-gray-500">- おしまい -</p>
-        <a href="index.html" class="back-button mt-4">🏠 アプリに戻る</a>
-    </div>
+        // Go to specific page
+        function goToPage(pageIndex) {
+            if (pageIndex >= 0 && pageIndex < totalPages) {
+                currentPage = pageIndex;
+                showPage(currentPage);
+                // Smooth scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
 
+        // Navigation event listeners
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentPage > 0) {
+                goToPage(currentPage - 1);
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentPage < totalPages - 1) {
+                goToPage(currentPage + 1);
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentPage > 0) {
+                goToPage(currentPage - 1);
+            } else if (e.key === 'ArrowRight' && currentPage < totalPages - 1) {
+                goToPage(currentPage + 1);
+            }
+        });
+
+        // Touch/swipe navigation for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0 && currentPage < totalPages - 1) {
+                    // Swipe left - next page
+                    goToPage(currentPage + 1);
+                } else if (diff < 0 && currentPage > 0) {
+                    // Swipe right - previous page
+                    goToPage(currentPage - 1);
+                }
+            }
+        }
+
+        // Initialize
+        generateNavDots();
+        showPage(0);
+
+        // Share functionality
+        document.getElementById('shareBtn').addEventListener('click', async () => {
+            const shareData = {
+                title: 'Web絵本「ひかりのびょうとう」',
+                text: 'Kizuna Memoryで生まれた物語から、素敵なWeb絵本ができました。「ひかりのびょうとう」をぜひご覧ください！ #KizunaMemory #ひかりのびょうとう',
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                    console.log('絵本が正常に共有されました');
+                } catch (err) {
+                    console.error('共有に失敗しました:', err);
+                }
+            } else {
+                // Fallback for browsers that do not support Web Share API
+                try {
+                    await navigator.clipboard.writeText(`${shareData.text}\n\n${shareData.url}`);
+                    alert('共有リンクをクリップボードにコピーしました！\nSNSなどに貼り付けて共有してください。');
+                } catch (err) {
+                    console.error('クリップボードへのコピーに失敗しました:', err);
+                    alert('共有機能が利用できませんでした。');
+                }
+            }
+        });
+
+        // Add fade-in animation to elements when they come into view
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all page elements
+        document.querySelectorAll('.page').forEach(page => {
+            observer.observe(page);
+        });
+    </script>
 </body>
 </html>

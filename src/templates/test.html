@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思い出から生まれた物語 - ひかりのびょうとう制作記録</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            line-height: 1.8;
+        }
+        .chat-bubble-ai {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .chat-bubble-human {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .story-section {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+        .memory-highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(168, 237, 234, 0.5); }
+            to { box-shadow: 0 0 20px rgba(254, 214, 227, 0.8); }
+        }
+        .page-break {
+            page-break-inside: avoid;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-12 page-break">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-heart text-pink-500 mr-3"></i>
+                思い出から生まれた物語
+            </h1>
+            <h2 class="text-2xl text-purple-600 mb-6">〜 ひかりのびょうとう 制作記録 〜</h2>
+            <div class="bg-white rounded-lg shadow-lg p-6 mx-auto max-w-2xl">
+                <p class="text-gray-700 text-lg">
+                    <i class="fas fa-robot text-blue-500 mr-2"></i>
+                    回想療法AIサービス「きずな記憶Web」での対話記録
+                </p>
+                <p class="text-sm text-gray-500 mt-2">
+                    セッション日時：2024年3月15日 14:00-15:30<br>
+                    参加者：ひかり病院 看護師長 田中さん（仮名）
+                </p>
+            </div>
+        </div>
+
+        <!-- Session Start -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-ai text-white p-6 rounded-lg shadow-lg mb-4">
+                <div class="flex items-start">
+                    <i class="fas fa-robot text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">AI アシスタント</h3>
+                        <p>こんにちは、田中さん。今日はお忙しい中、お時間をいただきありがとうございます。今日は、コロナ禍でのお仕事の思い出について、ゆっくりとお話しを聞かせていただければと思います。</p>
+                        <p class="mt-3">💭 どんな思い出について話しますか？まずは、2020年の春頃のことから始めてみませんか？</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Human Response 1 -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-human text-white p-6 rounded-lg shadow-lg mb-4 ml-8">
+                <div class="flex items-start">
+                    <i class="fas fa-user-nurse text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">田中さん（看護師長）</h3>
+                        <p>そうですね...あの頃は本当に大変でした。2020年の春、突然「コロナウイルス」という言葉が日常になって、病院も町中も、みんな不安でざわざわしていました。</p>
+                        <p class="mt-3">患者さんも、私たちスタッフも、家族も...誰もが見えない敵に対して、どうしたらいいのか分からない状態でした。マスクも足りなくて、防護服も限られていて...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Response 2 -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-ai text-white p-6 rounded-lg shadow-lg mb-4">
+                <div class="flex items-start">
+                    <i class="fas fa-robot text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">AI アシスタント</h3>
+                        <p>それは本当に不安な時期でしたね。そんな中で、病院のスタッフの皆さんはどのような気持ちでしたか？チーム内での話し合いなどはありましたか？</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Human Response 2 -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-human text-white p-6 rounded-lg shadow-lg mb-4 ml-8">
+                <div class="flex items-start">
+                    <i class="fas fa-user-nurse text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">田中さん</h3>
+                        <p>はい、毎日のように話し合いをしました。医師も、看護師も、事務の方も、清掃の方も...みんなで円になって座って。</p>
+                        <p class="mt-3">「私たちにできることは何だろう？」って、本当に真剣に考えました。普段は別々の仕事をしている私たちが、この時ばかりは一つのチームとして、同じ目標に向かって...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Memory Extraction Section -->
+        <div class="memory-highlight p-6 rounded-lg shadow-lg mb-8 page-break">
+            <h3 class="text-xl font-bold text-purple-800 mb-4">
+                <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                記憶から抽出されたキーワード
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-3 rounded shadow text-center">
+                    <i class="fas fa-virus text-red-500 mb-2"></i>
+                    <p class="text-sm font-semibold">コロナウイルス</p>
+                </div>
+                <div class="bg-white p-3 rounded shadow text-center">
+                    <i class="fas fa-users text-blue-500 mb-2"></i>
+                    <p class="text-sm font-semibold">チーム</p>
+                </div>
+                <div class="bg-white p-3 rounded shadow text-center">
+                    <i class="fas fa-heart text-pink-500 mb-2"></i>
+                    <p class="text-sm font-semibold">協力</p>
+                </div>
+                <div class="bg-white p-3 rounded shadow text-center">
+                    <i class="fas fa-hospital text-green-500 mb-2"></i>
+                    <p class="text-sm font-semibold">病院</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Response 3 -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-ai text-white p-6 rounded-lg shadow-lg mb-4">
+                <div class="flex items-start">
+                    <i class="fas fa-robot text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">AI アシスタント</h3>
+                        <p>素晴らしいチームワークですね。その話し合いの結果、具体的にはどのような行動を取られたのですか？</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Human Response 3 -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-human text-white p-6 rounded-lg shadow-lg mb-4 ml-8">
+                <div class="flex items-start">
+                    <i class="fas fa-user-nurse text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">田中さん</h3>
+                        <p>「コロナ専用の病棟を作ろう！」という決断をしました。設計図を広げて、ベッドの配置を考えて...普段は違う部署で働いている人たちが、一つの目標のために力を合わせました。</p>
+                        <p class="mt-3">でも、正直言うと、怖さもありました。初めてのことばかりで、疲れもたまって...それでも、患者さんからの「ありがとう」の一言で、また頑張れる気持ちになりました。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Response 4 -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-ai text-white p-6 rounded-lg shadow-lg mb-4">
+                <div class="flex items-start">
+                    <i class="fas fa-robot text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">AI アシスタント</h3>
+                        <p>その中で、特に印象に残っている出来事はありますか？小さなことでも構いません。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Human Response 4 -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-human text-white p-6 rounded-lg shadow-lg mb-4 ml-8">
+                <div class="flex items-start">
+                    <i class="fas fa-user-nurse text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">田中さん</h3>
+                        <p>そうですね...あ、そうそう！とても可愛い出来事がありました。ある日、一匹の猫が病棟に迷い込んできたんです。</p>
+                        <p class="mt-3">みんな、その瞬間、少しだけ笑顔になりました。患者さんも、スタッフも...その猫のおかげで、ほんの少しでも心が軽くなった気がして。それから、みんなその病棟を「ひかり病棟」って呼ぶようになったんです。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Response 5 -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-ai text-white p-6 rounded-lg shadow-lg mb-4">
+                <div class="flex items-start">
+                    <i class="fas fa-robot text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">AI アシスタント</h3>
+                        <p>素敵なエピソードですね。その経験を通して、田中さんが学んだこと、感じたことはありますか？</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Human Response 5 -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-human text-white p-6 rounded-lg shadow-lg mb-4 ml-8">
+                <div class="flex items-start">
+                    <i class="fas fa-user-nurse text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">田中さん</h3>
+                        <p>一人ひとりが本当に大切だということを、改めて実感しました。誰かの命を守るということは、実は自分の命も大切にするということなんだな、って。</p>
+                        <p class="mt-3">スタッフみんなで手を取り合って、支え合って...そうやって乗り越えてきた日々でした。コロナが落ち着いた今でも、「ひと」を大切にするケアを続けています。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final AI Message -->
+        <div class="mb-8 page-break">
+            <div class="chat-bubble-ai text-white p-6 rounded-lg shadow-lg mb-4">
+                <div class="flex items-start">
+                    <i class="fas fa-robot text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">AI アシスタント</h3>
+                        <p>田中さん、素晴らしいお話をありがとうございました。あなたの貴重な体験や思い出を、一つの物語にしてみませんか？</p>
+                        <p class="mt-3">この対話から、子どもたちにも伝わるような、心温まる物語が生まれるかもしれません。</p>
+                        <a href="test2.html" target="_blank" rel="noopener noreferrer" class="mt-6 inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-bold px-6 py-3 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                            <i class="fas fa-magic mr-2"></i>
+                            物語をつくる
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center py-8 page-break">
+            <div class="bg-white rounded-lg shadow-lg p-6 mx-auto max-w-2xl">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-heart text-red-500 mr-2"></i>
+                    記憶の力、物語の力
+                </h3>
+                <p class="text-gray-600">
+                    個人の大切な思い出や体験が、AIとの对話を通じて普遍的な物語として生まれ変わる。<br>
+                    それは次の世代へと受け継がれる、かけがえのない贈り物です。
+                </p>
+                <div class="mt-6 text-sm text-gray-500">
+                    <p><i class="fas fa-clock mr-1"></i> セッション時間：90分</p>
+                    <p><i class="fas fa-comments mr-1"></i> 対話回数：12回</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
