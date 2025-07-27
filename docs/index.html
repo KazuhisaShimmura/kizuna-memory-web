@@ -618,27 +618,69 @@
             });
         }
 
+        // 音声録音機能
+        function setupAudioRecording() {
+            document.getElementById("recordBtn").addEventListener("click", async () => {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        
+                        const recordedAudio = document.getElementById("recordedAudio");
+                        const audioPreview = document.getElementById("audioPreview");
+                        
+                        recordedAudio.src = audioUrl;
+                        audioPreview.classList.remove("hidden");
+
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            recordedAudioData = reader.result;
+                        };
+                        reader.readAsDataURL(audioBlob);
+                    };
+
+                    mediaRecorder.start();
+                    
+                    document.getElementById("recordBtn").disabled = true;
+                    document.getElementById("stopRecordBtn").disabled = false;
+                    document.getElementById("recordingStatus").textContent = "🔴 録音中...";
+                } catch (error) {
+                    console.error("マイクへのアクセスエラー:", error);
+                    alert("マイクへのアクセスが許可されていないか、このブラウザではサポートされていません。ページをHTTPSで読み込んでいるか確認してください。");
+                }
+            });
+
+            document.getElementById("stopRecordBtn").addEventListener("click", () => {
+                if (mediaRecorder && mediaRecorder.state === "recording") {
+                    mediaRecorder.stop();
+                    mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                    
+                    document.getElementById("recordBtn").disabled = false;
+                    document.getElementById("stopRecordBtn").disabled = true;
+                    document.getElementById("recordingStatus").textContent = "✅ 録音完了";
+                }
+            });
+        }
+
         // 物語生成機能
         function setupStoryGeneration() {
             document.getElementById("generateStoryBtn").addEventListener("click", generateStory);
             
-            document.getElementById("playStoryBtn").addEventListener("click", playStory);
-            
-            document.getElementById("continueStoryBtn").addEventListener("click", () => {
-                document.getElementById("continuationSection").classList.remove("hidden");
-            });
-
-            document.getElementById("shareStoryBtn").addEventListener("click", () => {
-                shareStory();
-            });
-
             document.querySelectorAll(".continuation-btn").forEach(btn => {
                 btn.addEventListener("click", () => {
                     generateContinuation(btn.dataset.type);
                 });
             });
 
-            // Add event listeners for input method selection
+            // 入力方法の選択イベントリスナー
             const selectTextBtn = document.getElementById('selectTextBtn');
             const selectVoiceBtn = document.getElementById('selectVoiceBtn');
             const textInputSection = document.getElementById('textInputSection');
